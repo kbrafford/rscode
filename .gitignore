@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Python related ignores
+*.pyc
+*.egg-info
+
+# IDE related ignores
+.vscode/
