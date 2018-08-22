@@ -31,4 +31,6 @@ This github-hosted project has the original source code in unmodified form, with
  
 ### Docker
 This project is being developed using [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) on **Windows 7** and **Windows 10**, and will be tested on a **Mint Linux** virtual machine as time allows. I welcome any feedback about how the Docker strategy is handled here.
+
+The docker container being used to generate windows output is [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) (Source: [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc))
  
