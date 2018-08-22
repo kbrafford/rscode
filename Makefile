@@ -4,9 +4,9 @@ STATICLIB := lib$(LIBNAME).a
 SHAREDLIB := lib$(LIBNAME)shared.dll
 
 DOCKER := docker run -it
-LOCALDIR := `pwd`
+LOCALDIR := $(shell ./getcwd.py)
 CONTDIR := /work
-VOLUME := -v "$(LOCALDIR)":$(CONTDIR)
+VOLUME := -v $(LOCALDIR):$(CONTDIR)
 CONTAINER := kbrafford/win-gcc
 TOOLROOT := x86_64-w64-mingw32
 
@@ -43,7 +43,7 @@ $(CTARGET): src/example.o $(STATICLIB)
 
 $(STATICLIB): $(LIBOBJ)
 	$(AR) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
-	if [ "$(RANLIB)" ]; then $(RANLIB) $(CONTDIR)/$@; fi
+	$(RANLIB) $(CONTDIR)/$@
 
 $(SHAREDLIB): $(LIBOBJ)
 	$(CC) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
