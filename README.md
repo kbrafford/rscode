@@ -24,6 +24,9 @@ The docker container being used to generate windows output is [https://hub.docke
 
 #### Docker-hosted build for the following targets
 
+Note: On Windows 7/10 using Docker Toolbox, I need to check out this repo in C:\Users\Public in order for Docker to correctly get the *-v* volume mapping to work. 
+
+None of this has been tested on Linux yet.
 
 ##### Example Executables
 | Target         | Status        |
