@@ -35,21 +35,21 @@ CFLAGS := -fPIC
 all : $(CTARGET) $(STATICLIB) $(SHAREDLIB)
 
 $(CTARGET): src/example.o $(STATICLIB)
-	$(CC) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR)/src -l$(LIBNAME)
+	$(CC) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR) -l$(LIBNAME)
 	$(STRIP) $(CONTDIR)/$@ 
 
 %.o : %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 $(STATICLIB): $(LIBOBJ)
-	$(AR) cq $(CONTDIR)/src/$@ $(addprefix $(CONTDIR)/, $^)
-	if [ "$(RANLIB)" ]; then $(RANLIB) $(CONTDIR)/src/$@; fi
+	$(AR) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
+	if [ "$(RANLIB)" ]; then $(RANLIB) $(CONTDIR)/$@; fi
 
 $(SHAREDLIB): $(LIBOBJ)
 	$(CC) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
 
 clean:
-	rm -f src/*.o src/*.a src/*.d src/*.so src/*.dll $(CTARGET) $(SHAREDLIB)
+	rm -f src/*.o src/*.a src/*.d src/*.so src/*.dll $(CTARGET) $(SHAREDLIB) $(STATICLIB)
 
 test:
 	@echo $(CC)
