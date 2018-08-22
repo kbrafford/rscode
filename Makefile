@@ -3,16 +3,10 @@ LIBNAME := ecc
 STATICLIB := lib$(LIBNAME).a
 SHAREDLIB := lib$(LIBNAME)shared.dll
 
-#else
-#    CTARGET := example
-#    STATICLIB := libecc.a
-#    SHAREDLIB := libeccshared.so
-#endif
-
 DOCKER := docker run -it
-LOCALDIR := $(abspath .)
+LOCALDIR := `pwd`
 CONTDIR := /work
-VOLUME := -v $(LOCALDIR):$(CONTDIR)
+VOLUME := -v "$(LOCALDIR)":$(CONTDIR)
 CONTAINER := kbrafford/win-gcc
 TOOLROOT := x86_64-w64-mingw32
 
@@ -41,26 +35,27 @@ CFLAGS := -fPIC
 all : $(CTARGET) $(STATICLIB) $(SHAREDLIB)
 
 $(CTARGET): src/example.o $(STATICLIB)
-	$(CC) -o $@ $(filter %.o,$^) -L. -l$(STATICLIB)
-	$(STRIP) $@ 
+	$(CC) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR)/src -l$(LIBNAME)
+	$(STRIP) $(CONTDIR)/$@ 
 
 %.o : %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 $(STATICLIB): $(LIBOBJ)
-	$(AR) cq $@ $^
-	if [ "$(RANLIB)" ]; then $(RANLIB) $@; fi
+	$(AR) cq $(CONTDIR)/src/$@ $(addprefix $(CONTDIR)/, $^)
+	if [ "$(RANLIB)" ]; then $(RANLIB) $(CONTDIR)/src/$@; fi
 
 $(SHAREDLIB): $(LIBOBJ)
-	$(CC) -shared -o $@ $^
+	$(CC) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
 
 clean:
-	rm -f *.o *.a *.d *.so *.dll $(CTARGET)
+	rm -f src/*.o src/*.a src/*.d src/*.so src/*.dll $(CTARGET) $(SHAREDLIB)
 
 test:
 	@echo $(CC)
 	@echo $(STRIP)
 	@echo $(LD)
-	@echo $(AR)	
+	@echo $(AR)
+	@echo $(RANLIB)
 
 -include $(DEPS)
