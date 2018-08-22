@@ -13,22 +13,23 @@ The code license is the GPL, and a very reasonable licensing structure is availa
    [hqm@alum.mit.edu](hqm@alum.mit.edu)*
 
 
-### This repo ([http://github.com/kbrafford/rscode](http://github.com/kbrafford/rscode))
+#### This repo ([http://github.com/kbrafford/rscode](http://github.com/kbrafford/rscode))
 This github-hosted project has the original source code in unmodified form, as well as a new docker-based build platform and Python wrapper class.
 
-### Docker
+
+#### Docker
 The C and libraries for this project are developed using [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) on **Windows 7** and **Windows 10**, and will be tested on a **Mint Linux** virtual machine as time allows. I welcome any feedback about how the Docker strategy is handled here.
 
 The docker container being used to generate windows output is [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) (Source: [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc))
 
 
-#### Docker-hosted build for the following targets
+##### Docker-hosted build for the following targets
 
-Note: On Windows 7/10 using Docker Toolbox, I need to check out this repo in C:\Users\Public in order for Docker to correctly get the *-v* volume mapping to work. 
+**Note:** On Windows 7 and 10 using Docker Toolbox, I find that I need to check out this repo in C:\Users\Public in order for Docker to correctly get the *-v* volume mapping option to work. I do not know why this is, but it appears to be normally expected behavior, so I don't assume it's a big problem.
 
-None of this has been tested on Linux yet.
+**Note:** None of this has been tested on Linux yet.
 
-##### Example Executables
+###### Example Executables
 | Target         | Status        |
 | -------------- |:-------------:|
 | 64-bit Windows | ***(done)***  |
@@ -37,7 +38,7 @@ None of this has been tested on Linux yet.
 | 32-bit Linux   |   *(todo)*    |
 
 
-##### Static Libraries
+###### Static Libraries
 | Target         | Status        |
 | -------------- |:-------------:|
 | 64-bit Windows | ***(done)***  |
@@ -46,7 +47,7 @@ None of this has been tested on Linux yet.
 | 32-bit Linux   |   *(todo)*    |
 
 
-##### Dynamic Link Libraries
+###### Dynamic Link Libraries
 | Target         | Status        |
 | -------------- |:-------------:|
 | 64-bit Windows .dll | ***(done)***  |
@@ -55,7 +56,7 @@ None of this has been tested on Linux yet.
 | 32-bit Linux .so    |   *(todo)*    |
 
    
-#### More Configuration Options
+##### More 
 | Target         | Status        |
 | -------------- |:-------------:|
 | 32/64-bit Python2/3 wrapper class (cross platform) |   *(todo)*    |
