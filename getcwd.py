@@ -7,6 +7,9 @@ import sys
 #  spit out the current working directory to stdout in the peculiar
 #  form that docker for windows seems to want bash for windows to emit
 #
+#  Keith R. Brafford
+#  https://github.com/kbrafford/rscode
+#
 
 #  >>> import os
 #  >>> print os.getcwd()
