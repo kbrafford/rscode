@@ -29,6 +29,8 @@ The docker container being used to generate windows output is [https://hub.docke
 
 **Note:** None of this has been tested on Linux yet.
 
+**Note:** If you're on Linux or Mac, make sure `getcwd.py` is marked as executable.  I'll stop using this python hack once I figure out the best way to migrate that hack into the makefile, but that will have to wait until I get all of my test setups working.
+
 ###### Example Executables
 | Target         | Status        |
 | -------------- |:-------------:|
