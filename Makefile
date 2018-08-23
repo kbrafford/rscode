@@ -16,7 +16,9 @@ LD := $(DOCKER) $(VOLUME) $(CONTAINER) $(TOOLROOT)-ld
 AR := $(DOCKER) $(VOLUME) $(CONTAINER) $(TOOLROOT)-ar
 RANLIB := $(DOCKER) $(VOLUME) $(CONTAINER) $(TOOLROOT)-ranlib
 
-LIBSRC := src/rs.c src/galois.c src/berlekamp.c src/crcgen.c
+SRCDIR := src/
+LIBSRCFILES := rs.c galois.c berlekamp.c crcgen.c
+LIBSRC := $(addprefix $(SRCDIR), $(LIBSRCFILES))
 LIBOBJ := $(LIBSRC:.c=.o)
 LIBDEP := $(LIBOBJ:.o=.d)
 
@@ -34,7 +36,7 @@ CFLAGS := -fPIC
 
 all : $(CTARGET) $(STATICLIB) $(SHAREDLIB)
 
-$(CTARGET): src/example.o $(STATICLIB)
+$(CTARGET): $(SRCDIR)example.o $(STATICLIB)
 	$(CC) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR) -l$(LIBNAME)
 	$(STRIP) $(CONTDIR)/$@ 
 
@@ -49,7 +51,7 @@ $(SHAREDLIB): $(LIBOBJ)
 	$(CC) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
 
 clean:
-	rm -f src/*.o src/*.a src/*.d src/*.so src/*.dll $(CTARGET) $(SHAREDLIB) $(STATICLIB)
+	rm -f $(SRCDIR)*.o $(SRCDIR)*.a $(SRCDIR)*.d $(SRCDIR)*.so $(SRCDIR)*.dll $(CTARGET) $(SHAREDLIB) $(STATICLIB)
 
 test:
 	@echo $(CC)
