@@ -54,10 +54,10 @@ It has been an enormous amount of time since I set it up on Linux, so I will rev
 The docker container being used to generate windows output is [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) (Source: [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc))
 
 ###### Containers Being Used
-| Target OS         | Container        |
-| -------------- |-------------|
-| Windows  | [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) |
-| Linux    | [https://hub.docker.com/r/kbrafford/x86_64-linux-gcc/](https://hub.docker.com/r/kbrafford/x86_64-linux-gcc/) |
+| Target OS         | Container        |  Source  |
+| -------------- |-------------|------------|
+| Windows  | [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) | [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc)|
+| Linux    | [https://hub.docker.com/r/kbrafford/x86_64-linux-gcc/](https://hub.docker.com/r/kbrafford/x86_64-linux-gcc/) |[https://github.com/kbrafford/x86_64-linux-gcc](https://github.com/kbrafford/x86_64-linux-gcc)|
 | Mac OS X | (N/A -- Mac builds are handled natively, but on mac only)
 
 
@@ -77,8 +77,7 @@ The docker container being used to generate windows output is [https://hub.docke
 | 32-bit Linux   | ***(done)***  | ***(done)***  | ***(done)***  |
 | Mac            | ***(done)***  | ***(done)***  | ***(done)***  |
 
-   
- 
+    
 | Target         | Status        |
 | -------------- |:-------------:|
 | 32/64-bit Python2/3 wrapper class (cross platform) |   *(todo)*    |
