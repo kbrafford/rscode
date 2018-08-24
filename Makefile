@@ -173,8 +173,13 @@ clean:
 	rm -r -f $(OUTDIR)
 
 test:
+	@echo "Windows 64-bit Tools:"
 	@echo $(CCW64) && echo $(STRIPW64) && echo $(LDW64) && echo $(ARW64) && echo $(RANLIBW64)
+	@echo && echo "Windows 32-bit Tools:"	
 	@echo $(CCW32) && echo $(STRIPW32) && echo $(LDW32) && echo $(ARW32) && echo $(RANLIBW32)
+	@echo && echo "Linux 64-bit Tools:"
 	@echo $(CCL64) && echo $(STRIPL64) && echo $(LDL64) && echo $(ARL64) && echo $(RANLIBL64)
+	@echo && echo "Linux 32-bit Tools:"	
 	@echo $(CCL32) && echo $(STRIPL32) && echo $(LDL32) && echo $(ARL32) && echo $(RANLIBL32)
+	@echo && echo "Mac Tools:"
 	@echo $(CCMAC) && echo $(STRIPMAC) && echo $(LDMAC) && echo $(ARMAC) && echo $(RANLIBMAC)
