@@ -83,7 +83,7 @@ all : $(TARGETS)
 
 %.om : %.c
 	@echo "mac module"
-	$(CCMAC) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
+	$(CCMAC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 # Static libs
 $(STATICLIBW64): $(LIBOBJW64)
@@ -113,8 +113,8 @@ $(STATICLIBL32): $(LIBOBJL32)
 $(STATICLIBMAC): $(LIBOBJMAC)
 	@echo "mac lib"
 	$(MKDIR_P) $(MACDIR)
-	$(ARMAC) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
-	$(RANLIBMAC) $(CONTDIR)/$@
+	$(ARMAC) cq $@ $^
+	$(RANLIBMAC) $@
 
 #  Example executables
 $(TARGETW64): $(SRCDIR)/example.ow64 $(STATICLIBW64)
@@ -139,8 +139,8 @@ $(TARGETL32): $(SRCDIR)/example.ol32 $(STATICLIBL32)
 
 $(TARGETMAC): $(SRCDIR)/example.om $(STATICLIBMAC)
 	@echo "mac exe"
-	$(CCMAC) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.om,$^)) -L$(CONTDIR)/$(MACDIR) -l$(LIBNAME)
-	$(STRIPMAC) $(CONTDIR)/$@ 
+	$(CCMAC) -o $@ $(filter %.om,$^) -L$(MACDIR) -l$(LIBNAME)
+	$(STRIPMAC) $@ 
 
 # Shared libraries
 $(SHAREDLIBW64): $(LIBOBJW64)
@@ -161,11 +161,11 @@ $(SHAREDLIBL32): $(LIBOBJL32)
 
 $(SHAREDLIBMAC): $(LIBOBJMAC)
 	@echo "mac dynlib"
-	$(CCMAC) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.om,$^))
+	$(CCMAC) -shared -o $@ $(filter %.om,$^)
 
 .PHONY: clean
 clean:
-	rm -f $(SRCDIR)/*.ow64 $(SRCDIR)/*.ow32 $(SRCDIR)/*.ol64 $(SRCDIR)/*.ol32 $(SRCDIR)/*.d
+	rm -f $(SRCDIR)/*.ow64 $(SRCDIR)/*.ow32 $(SRCDIR)/*.ol64 $(SRCDIR)/*.ol32 $(SRCDIR)/*.om $(SRCDIR)/*.d
 	rm -r -f $(OUTDIR)
 
 test:
