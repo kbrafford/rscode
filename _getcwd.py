@@ -19,6 +19,13 @@ import sys
 #  '/c/Users/Public/github/rscode'
 
 def fix_dir(cwd):
+    """Returns the current working directory.
+    If run from Windows the path format is changed to bash/docker format
+    otherwise it is left as-is.
+    
+    >>> fix_dir(os.getcwd())
+    '/c/Users/Public/github/rscode'
+    """
     if sys.platform == "win32":
         cwd = cwd.replace("\\","/").replace(":","")
         if not cwd.startswith("/"):
