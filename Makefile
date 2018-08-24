@@ -1,3 +1,5 @@
+BUNDLE := bundle.tar.gz
+
 TARGET := example
 LIBNAME := ecc
 
@@ -60,8 +62,10 @@ TARGETS := $(WINDOWS) $(LINUX) $(MAC)
 endif
 endif
 
-all : $(TARGETS)
- 
+all : $(BUNDLE)
+
+$(BUNDLE): $(TARGETS)
+	$(GZIP) $(CONTDIR)/$(BUNDLE) $(CONTDIR)/build
 #
 # Rules for intermediate files
 #
@@ -165,7 +169,7 @@ $(SHAREDLIBMAC): $(LIBOBJMAC)
 
 .PHONY: clean
 clean:
-	rm -f $(SRCDIR)/*.ow64 $(SRCDIR)/*.ow32 $(SRCDIR)/*.ol64 $(SRCDIR)/*.ol32 $(SRCDIR)/*.om $(SRCDIR)/*.d
+	rm -f $(SRCDIR)/*.ow64 $(SRCDIR)/*.ow32 $(SRCDIR)/*.ol64 $(SRCDIR)/*.ol32 $(SRCDIR)/*.om $(SRCDIR)/*.d $(BUNDLE)
 	rm -r -f $(OUTDIR)
 
 test:

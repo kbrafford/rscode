@@ -1,7 +1,13 @@
 DOCKER := docker run -it
 LOCALDIR := $(shell ./_getcwd.py)
-CONTDIR := /work
+CONTDIR := /bundle
 VMAP := -v $(LOCALDIR):$(CONTDIR)
+
+#
+# Generic tools
+#
+CONTAINER_TOOLS := kbrafford/x86_64-linux-gcc
+GZIP := $(DOCKER) $(VMAP) $(CONTAINER_TOOLS) tar -cvzf
 
 #
 # 64-bit Windows
