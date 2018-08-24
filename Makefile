@@ -1,32 +1,42 @@
 TARGET := example
 LIBNAME := ecc
 
-SRCDIR := src/
+SRCDIR := src
 LIBSRCFILES := rs.c galois.c berlekamp.c crcgen.c
-LIBSRC := $(addprefix $(SRCDIR), $(LIBSRCFILES))
+LIBSRC := $(addprefix $(SRCDIR)/, $(LIBSRCFILES))
+
+OUTDIR := build
+WINDIR := $(OUTDIR)/win
+LINDIR := $(OUTDIR)/linux
+MACDIR := $(OUTDIR)/mac
 
 # Windows
-TARGETW64 := example64.exe
-TARGETW32 := example.exe
-W64STATICLIB := lib$(LIBNAME)64.a
-W64SHAREDLIB := lib$(LIBNAME)64.dll
-W32STATICLIB := lib$(LIBNAME).a
-W32SHAREDLIB := lib$(LIBNAME).dll
+TARGETW64 := $(WINDIR)/example64.exe
+TARGETW32 := $(WINDIR)/example.exe
+STATICLIBW64 := $(WINDIR)/lib$(LIBNAME)64.a
+SHAREDLIBW64 := $(WINDIR)/lib$(LIBNAME)64.dll
+STATICLIBW32 := $(WINDIR)/lib$(LIBNAME).a
+SHAREDLIBW32 := $(WINDIR)/lib$(LIBNAME).dll
 
 # Linux
-TARGETL64 := example64
-TARGETL32 := example
-L64STATICLIB := lib$(LIBNAME)64.a
-L64SHAREDLIB := lib$(LIBNAME)64.so
-L32STATICLIB := lib$(LIBNAME).a
-L32SHAREDLIB := lib$(LIBNAME).so
+TARGETL64 := $(LINDIR)/example64
+TARGETL32 := $(LINDIR)/example
+STATICLIBL64 := $(LINDIR)/lib$(LIBNAME)64.a
+SHAREDLIBL64 := $(LINDIR)/lib$(LIBNAME)64.so
+STATICLIBL32 := $(LINDIR)/lib$(LIBNAME).a
+SHAREDLIBL32 := $(LINDIR)/lib$(LIBNAME).so
 
+# Mac
+TARGETMAC := $(MACDIR)/example
+STATICLIBMAC := $(MACDIR)/lib$(LIBNAME).a
+SHAREDLIBMAC := $(MACDIR)/lib$(LIBNAME).dynlib
 
 
 LIBOBJW64 := $(LIBSRC:.c=.ow64)
 LIBOBJW32 := $(LIBSRC:.c=.ow32)
 LIBOBJL64 := $(LIBSRC:.c=.ol64)
 LIBOBJL32 := $(LIBSRC:.c=.ol32)
+LIBOBJMAC := $(LIBSRC:.c=.om)
 
 include tools.mk
 
@@ -34,82 +44,129 @@ CPPFLAGS := -MMD
 CPPFLAGS += -MP
 CFLAGS := -fPIC
 
-WINDOWS := $(TARGETW64) $(TARGETW32) $(W64STATICLIB) $(W32STATICLIB) $(W64SHAREDLIB) $(W32SHAREDLIB)
-LINUX := $(TARGETL64) $(TARGETL32) $(L64STATICLIB) $(L32STATICLIB) $(L64SHAREDLIB) $(L32SHAREDLIB)
+WINDOWS := $(TARGETW64) $(TARGETW32) $(STATICLIBW64) $(STATICLIBW32) $(SHAREDLIBW64) $(SHAREDLIBW32)
+LINUX := $(TARGETL64) $(TARGETL32) $(STATICLIBL64) $(STATICLIBL32) $(SHAREDLIBL64) $(SHAREDLIBL32)
+MAC := $(TARGETMAC) $(STATICLIBMAC) $(SHAREDLIBMAC)
 
-all : $(WINDOWS)
+MKDIR_P := mkdir -p
 
+ifeq ($(OS), Windows_NT)
+TARGETS := $(WINDOWS) $(LINUX)
+else
+ifeq ($(OSTYPE), linux-gnu)
+TARGETS := $(WINDOWS) $(LINUX)
+else
+TARGETS := $(WINDOWS) $(LINUX) $(MAC)
+endif
+endif
+
+all : $(TARGETS)
+ 
 #
 # Rules for intermediate files
 #
 %.ow64 : %.c
+	@echo "64 bit windows module"
 	$(CCW64) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 %.ow32 : %.c
+	@echo "32 bit windows module"
 	$(CCW32) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 %.ol64 : %.c
+	@echo "64 bit linux module"
 	$(CCL64) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 %.ol32 : %.c
+	@echo "32 bit linux module"
 	$(CCL32) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 %.om : %.c
+	@echo "mac module"
 	$(CCMAC) $(CPPFLAGS) $(CFLAGS) -c -o $(CONTDIR)/$@ $(CONTDIR)/$<
 
 # Static libs
-$(W64STATICLIB): $(LIBOBJW64)
+$(STATICLIBW64): $(LIBOBJW64)
+	@echo "64 bit windows lib"
+	$(MKDIR_P) $(WINDIR)
 	$(ARW64) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBW64) $(CONTDIR)/$@
 
-$(W32STATICLIB): $(LIBOBJW32)
+$(STATICLIBW32): $(LIBOBJW32)
+	@echo "32 bit windows lib"
+	$(MKDIR_P) $(WINDIR)
 	$(ARW32) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBW32) $(CONTDIR)/$@
 
-$(L64STATICLIB): $(LIBOBJL64)
+$(STATICLIBL64): $(LIBOBJL64)
+	@echo "64 bit linux lib"
+	$(MKDIR_P) $(LINDIR)
 	$(ARL64) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBL64) $(CONTDIR)/$@
 
-$(L32STATICLIB): $(LIBOBJL32)
+$(STATICLIBL32): $(LIBOBJL32)
+	@echo "32 bit linux lib"
+	$(MKDIR_P) $(LINDIR)
 	$(ARL32) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBL32) $(CONTDIR)/$@
 
+$(STATICLIBMAC): $(LIBOBJMAC)
+	@echo "mac lib"
+	$(MKDIR_P) $(MACDIR)
+	$(ARMAC) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
+	$(RANLIBMAC) $(CONTDIR)/$@
+
 #  Example executables
-$(TARGETW64): $(SRCDIR)example.ow64 $(W64STATICLIB)
-	@echo "64 bit windows"
-	$(CCW64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR) -l$(LIBNAME)64
+$(TARGETW64): $(SRCDIR)/example.ow64 $(STATICLIBW64)
+	@echo "64 bit windows exe"
+	$(CCW64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^)) -L$(CONTDIR)/$(WINDIR) -l$(LIBNAME)64
 	$(STRIPW64) $(CONTDIR)/$@ 
 
-$(TARGETW32): $(SRCDIR)example.ow32 $(W32STATICLIB)
-	@echo "32 bit windows"
-	$(CCW32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR) -l$(LIBNAME)
+$(TARGETW32): $(SRCDIR)/example.ow32 $(STATICLIBW32)
+	@echo "32 bit windows exe"
+	$(CCW32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^)) -L$(CONTDIR)/$(WINDIR) -l$(LIBNAME)
 	$(STRIPW32) $(CONTDIR)/$@ 
 
-$(TARGETL64): $(SRCDIR)example.ol64 $(L64STATICLIB)
-	$(CCL64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR) -l$(LIBNAME)
+$(TARGETL64): $(SRCDIR)/example.ol64 $(STATICLIBL64)
+	@echo "64 bit linux exe"
+	$(CCL64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^)) -L$(CONTDIR)/$(LINDIR) -l$(LIBNAME)64
 	$(STRIPL64) $(CONTDIR)/$@ 
 
-$(TARGETL32): $(SRCDIR)example.ol32 $(L32STATICLIB)
-	$(CCL32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^)) -L$(CONTDIR) -l$(LIBNAME)
+$(TARGETL32): $(SRCDIR)/example.ol32 $(STATICLIBL32)
+	@echo "32 bit linux exe"
+	$(CCL32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^)) -L$(CONTDIR)/$(LINDIR) -l$(LIBNAME)
 	$(STRIPL32) $(CONTDIR)/$@ 
 
+$(TARGETMAC): $(SRCDIR)/example.om $(STATICLIBMAC)
+	@echo "mac exe"
+	$(CCMAC) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.om,$^)) -L$(CONTDIR)/$(MACDIR) -l$(LIBNAME)
+	$(STRIPMAC) $(CONTDIR)/$@ 
+
 # Shared libraries
-$(W64SHAREDLIB): $(LIBOBJW64)
-	$(CCW64) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
+$(SHAREDLIBW64): $(LIBOBJW64)
+	@echo "64 bit windows dll"
+	$(CCW64) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))
 
-$(W32SHAREDLIB): $(LIBOBJW32)
-	$(CCW32) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
+$(SHAREDLIBW32): $(LIBOBJW32)
+	@echo "32 bit windows dll"
+	$(CCW32) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^))
 
-$(L64SHAREDLIB): $(LIBOBJL64)
-	$(CCL64) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
+$(SHAREDLIBL64): $(LIBOBJL64)
+	@echo "64 bit linux so"
+	$(CCL64) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^))
 
-$(L32SHAREDLIB): $(LIBOBJL32)
-	$(CCL32) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.o,$^))
+$(SHAREDLIBL32): $(LIBOBJL32)
+	@echo "32 bit linux so"
+	$(CCL32) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^))
+
+$(SHAREDLIBMAC): $(LIBOBJMAC)
+	@echo "mac dynlib"
+	$(CCMAC) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.om,$^))
 
 .PHONY: clean
 clean:
-	rm -f $(SRCDIR)*.ow64 $(SRCDIR)*.ow32 $(SRCDIR)*.ol64 $(SRCDIR)*.ol32 $(SRCDIR)*.d *.lib *.a *.so *.dll *.dynlib
-
+	rm -f $(SRCDIR)/*.ow64 $(SRCDIR)/*.ow32 $(SRCDIR)/*.ol64 $(SRCDIR)/*.ol32 $(SRCDIR)/*.d
+	rm -r -f $(OUTDIR)
 
 test:
 	@echo $(CCW64) && echo $(STRIPW64) && echo $(LDW64) && echo $(ARW64) && echo $(RANLIBW64)
