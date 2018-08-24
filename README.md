@@ -13,52 +13,72 @@ The code license is the GPL, and a very reasonable licensing structure is availa
    [hqm@alum.mit.edu](hqm@alum.mit.edu)*
 
 
-#### This repo ([http://github.com/kbrafford/rscode](http://github.com/kbrafford/rscode))
+#### This repo
+[http://github.com/kbrafford/rscode](http://github.com/kbrafford/rscode)
+
 This github-hosted project has the original source code in unmodified form, as well as a new docker-based build platform and Python wrapper class.
+
+If you build it on Windows or Linux, you get a sample executable, static library, and shared library for both 32-bit and 64-bit Windows and Linux.
+
+If you build it on the Mac, you get all of the Windows and Linux targets, as well as an executable, static lib, and shared lib for the Mac as well.
 
 
 #### Docker
 The C and libraries for this project are developed using [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) on **Windows 7** and **Windows 10**, [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) on the **Mac**, and will be tested on a **Mint Linux** virtual machine as time allows. I welcome any feedback about how the Docker strategy is handled here.
 
+I typically set up Docker on my Linux machine thusly:
+```
+sudo apt install -y docker.io
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+Though I also have in my notes the following approach:
+```
+# First import the GPG key
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+
+# Next, point the package manager to the official Docker repository
+sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+
+# Installing both packages will eliminate an unmet dependencies error when you try to install the 
+# linux-image-extra-virtual by itself
+sudo apt install -y linux-image-generic linux-image-extra-virtual
+ 
+# Reboot the system so it would be running on the newly installed kernel image 
+sudo reboot
+```
+
+It has been an enormous amount of time since I set it up on Linux, so I will revisit this topic when time permits, to add clarity.
+
 The docker container being used to generate windows output is [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) (Source: [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc))
 
+###### Containers Being Used
+| Target OS         | Container        |
+| -------------- |-------------|
+| Windows  | [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) |
+| Linux    | [https://hub.docker.com/r/kbrafford/x86_64-linux-gcc/](https://hub.docker.com/r/kbrafford/x86_64-linux-gcc/) |
+| Mac OS X | (N/A -- Mac builds are handled natively, but on mac only)
 
-##### Docker-hosted build for the following targets
 
 **Note:** On Windows 7 and 10 using Docker Toolbox, I find that I need to check out this repo in C:\Users\Public in order for Docker to correctly get the *-v* volume mapping option to work. I do not know why this is, but it appears to be normally expected behavior, so I don't assume it's a big problem.
 
 **Note:** None of this has been tested on Linux yet.
 
-**Note:** If you're on Linux or Mac, make sure `getcwd.py` is marked as executable.  I'll stop using this python hack once I figure out the best way to migrate that hack into the makefile, but that will have to wait until I get all of my test setups working.
+**Note:** If you're on Linux or Mac, make sure `_getcwd.py` is marked as executable.  I'll stop using this python hack once I figure out the best way to migrate that hack into the makefile, but that will have to wait until I get all of my test setups working.
 
-###### Example Executables
-| Target         | Status        |
-| -------------- |:-------------:|
-| 64-bit Windows | ***(done)***  |
-| 32-bit Windows |   *(todo)*    |
-| 64-bit Linux   |   *(todo)*    |
-| 32-bit Linux   |   *(todo)*    |
+#### Status
 
-
-###### Static Libraries
-| Target         | Status        |
-| -------------- |:-------------:|
-| 64-bit Windows | ***(done)***  |
-| 32-bit Windows |   *(todo)*    |
-| 64-bit Linux   |   *(todo)*    |
-| 32-bit Linux   |   *(todo)*    |
-
-
-###### Dynamic Link Libraries
-| Target         | Status        |
-| -------------- |:-------------:|
-| 64-bit Windows .dll | ***(done)***  |
-| 32-bit Windows .dll |   *(todo)*    |
-| 64-bit Linux .so    |   *(todo)*    |
-| 32-bit Linux .so    |   *(todo)*    |
+| Target Architecture        | Executable Status | Library Status | Shared Library Status |
+| -------------- |:-------------:|:-------------:|:-------------:|
+| 64-bit Windows | ***(done)***  | ***(done)***  | ***(done)***  |
+| 32-bit Windows | ***(done)***  | ***(done)***  | ***(done)***  |
+| 64-bit Linux   | ***(done)***  | ***(done)***  | ***(done)***  |
+| 32-bit Linux   | ***(done)***  | ***(done)***  | ***(done)***  |
+| Mac            | ***(done)***  | ***(done)***  | ***(done)***  |
 
    
-##### More 
+ 
 | Target         | Status        |
 | -------------- |:-------------:|
 | 32/64-bit Python2/3 wrapper class (cross platform) |   *(todo)*    |
