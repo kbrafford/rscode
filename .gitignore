@@ -52,8 +52,11 @@ Mkfile.old
 dkms.conf
 
 # Python related ignores
-*.pyc
+.pyc
 *.egg-info
 
 # IDE related ignores
 .vscode/
+
+# Mac stuff
+.DS_Store
