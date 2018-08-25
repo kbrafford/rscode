@@ -1,8 +1,8 @@
 #
 # SECTION 1: What we are making
 #
-# APPLICATION is the name of the executable
-APPLICATION := example
+# APPNAME is the name of the executable
+APPNAME := example
 
 # LIBNAME is the name of the static lib and DLL
 LIBNAME := ecc
