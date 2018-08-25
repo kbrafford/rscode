@@ -6,26 +6,40 @@ WINDIR := $(OUTDIR)/win
 LINDIR := $(OUTDIR)/linux
 MACDIR := $(OUTDIR)/mac
 
-# Windows
-TARGETW64 := $(WINDIR)/$(APPNAME)64.exe
-TARGETW32 := $(WINDIR)/$(APPNAME).exe
-STATICLIBW64 := $(WINDIR)/lib$(LIBNAME)64.a
-SHAREDLIBW64 := $(WINDIR)/lib$(LIBNAME)64.dll
-STATICLIBW32 := $(WINDIR)/lib$(LIBNAME).a
-SHAREDLIBW32 := $(WINDIR)/lib$(LIBNAME).dll
+include tools.mk
 
-# Linux
-TARGETL64 := $(LINDIR)/$(APPNAME)64
-TARGETL32 := $(LINDIR)/$(APPNAME)
-STATICLIBL64 := $(LINDIR)/lib$(LIBNAME)64.a
-SHAREDLIBL64 := $(LINDIR)/lib$(LIBNAME)64.so
-STATICLIBL32 := $(LINDIR)/lib$(LIBNAME).a
-SHAREDLIBL32 := $(LINDIR)/lib$(LIBNAME).so
+CPPFLAGS := -MMD
+CPPFLAGS += -MP
+CFLAGS := -fPIC
 
-# Mac
-TARGETMAC := $(MACDIR)/$(APPNAME)
-STATICLIBMAC := $(MACDIR)/lib$(LIBNAME).a
-SHAREDLIBMAC := $(MACDIR)/lib$(LIBNAME).dynlib
+ifneq ($(APPNAME),)
+ TARGETW64 := $(WINDIR)/$(APPNAME)64.exe
+ TARGETW32 := $(WINDIR)/$(APPNAME).exe
+ TARGETL64 := $(LINDIR)/$(APPNAME)64
+ TARGETL32 := $(LINDIR)/$(APPNAME)
+ TARGETMAC := $(MACDIR)/$(APPNAME)
+
+ WINDOWS += $(TARGETW64) $(TARGETW32)
+ LINUX += $(TARGETL64) $(TARGETL32)
+ MAC += $(TARGETMAC)
+endif
+
+ifneq ($(LIBNAME),)
+ STATICLIBW64 := $(WINDIR)/lib$(LIBNAME)64.a
+ SHAREDLIBW64 := $(WINDIR)/lib$(LIBNAME)64.dll
+ STATICLIBW32 := $(WINDIR)/lib$(LIBNAME).a
+ SHAREDLIBW32 := $(WINDIR)/lib$(LIBNAME).dll
+ STATICLIBL64 := $(LINDIR)/lib$(LIBNAME)64.a
+ SHAREDLIBL64 := $(LINDIR)/lib$(LIBNAME)64.so
+ STATICLIBL32 := $(LINDIR)/lib$(LIBNAME).a
+ SHAREDLIBL32 := $(LINDIR)/lib$(LIBNAME).so
+ STATICLIBMAC := $(MACDIR)/lib$(LIBNAME).a
+ SHAREDLIBMAC := $(MACDIR)/lib$(LIBNAME).dynlib
+
+ WINDOWS += $(STATICLIBW64) $(STATICLIBW32) $(SHAREDLIBW64) $(SHAREDLIBW32)
+ LINUX += $(STATICLIBL64) $(STATICLIBL32) $(SHAREDLIBL64) $(SHAREDLIBL32)
+ MAC += $(STATICLIBMAC) $(SHAREDLIBMAC)
+endif
 
 LIBOBJW64 := $(LIBSRC:.c=.ow64)
 LIBOBJW32 := $(LIBSRC:.c=.ow32)
@@ -33,17 +47,8 @@ LIBOBJL64 := $(LIBSRC:.c=.ol64)
 LIBOBJL32 := $(LIBSRC:.c=.ol32)
 LIBOBJMAC := $(LIBSRC:.c=.om)
 
-include tools.mk
-
-CPPFLAGS := -MMD
-CPPFLAGS += -MP
-CFLAGS := -fPIC
-
-WINDOWS := $(TARGETW64) $(TARGETW32) $(STATICLIBW64) $(STATICLIBW32) $(SHAREDLIBW64) $(SHAREDLIBW32)
-LINUX := $(TARGETL64) $(TARGETL32) $(STATICLIBL64) $(STATICLIBL32) $(SHAREDLIBL64) $(SHAREDLIBL32)
-MAC := $(TARGETMAC) $(STATICLIBMAC) $(SHAREDLIBMAC)
-
 MKDIR_P := mkdir -p
+
 
 ifeq ($(OS), Windows_NT)
  TARGETS := $(WINDOWS) $(LINUX)
@@ -118,26 +123,31 @@ $(STATICLIBMAC): $(LIBOBJMAC)
 #  Application executables
 $(TARGETW64): $(addsuffix .ow64, $(basename $(APPSRC))) $(STATICLIBW64)
 	@echo "64 bit windows exe"
+	$(MKDIR_P) $(WINDIR)	
 	$(CCW64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))  $(addprefix $(CONTDIR)/, $(STATICLIBW64))
 	$(STRIPW64) $(CONTDIR)/$@ 
 
 $(TARGETW32): $(addsuffix .ow32, $(basename $(APPSRC))) $(STATICLIBW32)
 	@echo "32 bit windows exe"
+	$(MKDIR_P) $(WINDIR)	
 	$(CCW32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBW32)) 
 	$(STRIPW32) $(CONTDIR)/$@ 
 
 $(TARGETL64): $(addsuffix .ol64, $(basename $(APPSRC))) $(STATICLIBL64)
 	@echo "64 bit linux exe"
+	$(MKDIR_P) $(LINDIR)	
 	$(CCL64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL64))
 	$(STRIPL64) $(CONTDIR)/$@ 
 
 $(TARGETL32): $(addsuffix .ol32, $(basename $(APPSRC))) $(STATICLIBL32)
 	@echo "32 bit linux exe"
+	$(MKDIR_P) $(LINDIR)	
 	$(CCL32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL32))
 	$(STRIPL32) $(CONTDIR)/$@ 
 
 $(TARGETMAC): $(addsuffix .om, $(basename $(APPSRC))) $(STATICLIBMAC)
 	@echo "mac exe"
+	$(MKDIR_P) $(MACDIR)	
 	$(CCMAC) -o $@ $(filter %.om,$^) -L$(MACDIR) -l$(LIBNAME)
 	$(STRIPMAC) $@ 
 

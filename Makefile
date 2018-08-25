@@ -16,7 +16,7 @@ ARCHIVENAME := bundle
 
 # APPSRC is the list of source files for the application
 _SRCDIR := src
-_APPSRCFILES := example.c
+_APPSRCFILES := example.c 
 APPSRC := $(addprefix $(_SRCDIR)/, $(_APPSRCFILES))
 
 # LIBSRC is the list of source files for the library
