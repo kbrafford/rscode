@@ -176,7 +176,7 @@ $(SHAREDLIBMAC): $(LIBOBJMAC)
 
 .PHONY: clean
 clean:
-	rm -f $(addsuffix *.ow64, $(SRCDIRS)) $(addsuffix *.ow32, $(SRCDIRS)) $(addsuffix *.ol64, $(SRCDIRS)) $(addsuffix *.ol32, $(SRCDIRS)) $(addsuffix *.om, $(SRCDIRS)) $(addsuffix *.d, $(SRCDIRS))
+	rm -f $(addsuffix *.ow64, $(SRCDIRS)) $(addsuffix *.ow32, $(SRCDIRS)) $(addsuffix *.ol64, $(SRCDIRS)) $(addsuffix *.ol32, $(SRCDIRS)) $(addsuffix *.om, $(SRCDIRS)) $(addsuffix *.o, $(SRCDIRS)) $(addsuffix *.d, $(SRCDIRS))
 	rm -r -f $(OUTDIR)
 
 test:
