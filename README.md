@@ -29,7 +29,8 @@ The C and libraries for this project are developed using [Docker Toolbox](https:
 I typically set up Docker on my Linux machine thusly:
 ```
 # First import the GPG key
-sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys \
+58118E89F3A912897C070ADBF76221572C52609D
 
 # Next, point the package manager to the official Docker repository
 sudo apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main'
@@ -49,8 +50,6 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 
-
-The docker container being used to generate windows output is [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) (Source: [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc))
 
 ###### Containers Being Used
 | Target OS         | Container        |  Source  |
