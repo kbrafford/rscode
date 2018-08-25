@@ -46,13 +46,15 @@ MAC := $(TARGETMAC) $(STATICLIBMAC) $(SHAREDLIBMAC)
 MKDIR_P := mkdir -p
 
 ifeq ($(OS), Windows_NT)
-TARGETS := $(WINDOWS) $(LINUX)
+ TARGETS := $(WINDOWS) $(LINUX)
 else
-ifeq ($(OSTYPE), linux-gnu)
-TARGETS := $(WINDOWS) $(LINUX)
-else
-TARGETS := $(WINDOWS) $(LINUX) $(MAC)
-endif
+ UNAME_S := $(shell uname -s)
+ ifeq ($(UNAME_S),Linux)
+  TARGETS := $(WINDOWS) $(LINUX)  
+ endif
+ ifeq ($(UNAME_S),Darwin)
+  TARGETS := $(WINDOWS) $(LINUX) $(MAC) 
+ endif
 endif
 
 all : $(ARCHIVE)
