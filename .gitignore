@@ -6,6 +6,11 @@
 *.ko
 *.obj
 *.elf
+*.ow64
+*.ow32
+*.ol64
+*.ol32
+*.om
 
 # Linker output
 *.ilk
@@ -60,3 +65,6 @@ dkms.conf
 
 # Mac stuff
 .DS_Store
+
+# repo specific
+build/
