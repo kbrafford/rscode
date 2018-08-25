@@ -1,5 +1,8 @@
-
 ARCHIVE := $(ARCHIVENAME).tar.gz
+
+uniq = $(if $1,$(firstword $1) $(call uniq,$(filter-out $(firstword $1),$1)))
+
+SRCDIRS := $(call uniq, $(dir $(APPSRC)) $(dir $(LIBSRC)))
 
 OUTDIR := build
 WINDIR := $(OUTDIR)/win
@@ -8,9 +11,9 @@ MACDIR := $(OUTDIR)/mac
 
 include tools.mk
 
-CPPFLAGS := -MMD
+CPPFLAGS += -MMD
 CPPFLAGS += -MP
-CFLAGS := -fPIC
+CFLAGS += -fPIC
 
 ifneq ($(APPNAME),)
  TARGETW64 := $(WINDIR)/$(APPNAME)64.exe
@@ -48,7 +51,6 @@ LIBOBJL32 := $(LIBSRC:.c=.ol32)
 LIBOBJMAC := $(LIBSRC:.c=.om)
 
 MKDIR_P := mkdir -p
-
 
 ifeq ($(OS), Windows_NT)
  TARGETS := $(WINDOWS) $(LINUX)
@@ -124,57 +126,57 @@ $(STATICLIBMAC): $(LIBOBJMAC)
 $(TARGETW64): $(addsuffix .ow64, $(basename $(APPSRC))) $(STATICLIBW64)
 	@echo "64 bit windows exe"
 	$(MKDIR_P) $(WINDIR)	
-	$(CCW64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))  $(addprefix $(CONTDIR)/, $(STATICLIBW64))
+	$(CCW64) $(CPPFLAGS) $(CFLAGS) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))  $(addprefix $(CONTDIR)/, $(STATICLIBW64))
 	$(STRIPW64) $(CONTDIR)/$@ 
 
 $(TARGETW32): $(addsuffix .ow32, $(basename $(APPSRC))) $(STATICLIBW32)
 	@echo "32 bit windows exe"
 	$(MKDIR_P) $(WINDIR)	
-	$(CCW32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBW32)) 
+	$(CCW32) $(CPPFLAGS) $(CFLAGS) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBW32)) 
 	$(STRIPW32) $(CONTDIR)/$@ 
 
 $(TARGETL64): $(addsuffix .ol64, $(basename $(APPSRC))) $(STATICLIBL64)
 	@echo "64 bit linux exe"
 	$(MKDIR_P) $(LINDIR)	
-	$(CCL64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL64))
+	$(CCL64) $(CPPFLAGS) $(CFLAGS) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL64))
 	$(STRIPL64) $(CONTDIR)/$@ 
 
 $(TARGETL32): $(addsuffix .ol32, $(basename $(APPSRC))) $(STATICLIBL32)
 	@echo "32 bit linux exe"
 	$(MKDIR_P) $(LINDIR)	
-	$(CCL32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL32))
+	$(CCL32) $(CPPFLAGS) $(CFLAGS) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL32))
 	$(STRIPL32) $(CONTDIR)/$@ 
 
 $(TARGETMAC): $(addsuffix .om, $(basename $(APPSRC))) $(STATICLIBMAC)
 	@echo "mac exe"
 	$(MKDIR_P) $(MACDIR)	
-	$(CCMAC) -o $@ $(filter %.om,$^) -L$(MACDIR) -l$(LIBNAME)
+	$(CCMAC) $(CPPFLAGS) $(CFLAGS) -o $@ $(filter %.om,$^) -L$(MACDIR) -l$(LIBNAME)
 	$(STRIPMAC) $@ 
 
 # Shared libraries
 $(SHAREDLIBW64): $(LIBOBJW64)
 	@echo "64 bit windows dll"
-	$(CCW64) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))
+	$(CCW64) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))
 
 $(SHAREDLIBW32): $(LIBOBJW32)
 	@echo "32 bit windows dll"
-	$(CCW32) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^))
+	$(CCW32) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^))
 
 $(SHAREDLIBL64): $(LIBOBJL64)
 	@echo "64 bit linux so"
-	$(CCL64) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^))
+	$(CCL64) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^))
 
 $(SHAREDLIBL32): $(LIBOBJL32)
 	@echo "32 bit linux so"
-	$(CCL32) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^))
+	$(CCL32) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^))
 
 $(SHAREDLIBMAC): $(LIBOBJMAC)
 	@echo "mac dynlib"
-	$(CCMAC) -shared -o $@ $(filter %.om,$^)
+	$(CCMAC) $(CPPFLAGS) $(CFLAGS) -shared -o $@ $(filter %.om,$^)
 
 .PHONY: clean
 clean:
-	rm -f $(SRCDIR)/*.ow64 $(SRCDIR)/*.ow32 $(SRCDIR)/*.ol64 $(SRCDIR)/*.ol32 $(SRCDIR)/*.om $(SRCDIR)/*.d $(ARCHIVE)
+	rm -f $(addsuffix *.ow64, $(SRCDIRS)) $(addsuffix *.ow32, $(SRCDIRS)) $(addsuffix *.ol64, $(SRCDIRS)) $(addsuffix *.ol32, $(SRCDIRS)) $(addsuffix *.om, $(SRCDIRS)) $(addsuffix *.d, $(SRCDIRS))
 	rm -r -f $(OUTDIR)
 
 test:

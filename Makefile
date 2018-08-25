@@ -23,5 +23,9 @@ APPSRC := $(addprefix $(_SRCDIR)/, $(_APPSRCFILES))
 _LIBSRCFILES := rs.c galois.c berlekamp.c crcgen.c
 LIBSRC := $(addprefix $(_SRCDIR)/, $(_LIBSRCFILES))
 
+# Add project specific compiler flags
+CFLAGS += -Wall
+CFLAGS += -O2
+
 # Now we pass all this information off to dockermake!
 include dockermake.mk
