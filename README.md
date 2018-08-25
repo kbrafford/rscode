@@ -28,13 +28,6 @@ The C and libraries for this project are developed using [Docker Toolbox](https:
 
 I typically set up Docker on my Linux machine thusly:
 ```
-sudo apt install -y docker.io
-sudo groupadd docker
-sudo usermod -aG docker $USER
-```
-
-Though I also have in my notes the following approach:
-```
 # First import the GPG key
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 
@@ -49,7 +42,13 @@ sudo apt install -y linux-image-generic linux-image-extra-virtual
 sudo reboot
 ```
 
-It has been an enormous amount of time since I set it up on Linux, so I will revisit this topic when time permits, to add clarity.
+Then do this:
+```
+sudo apt install -y docker.io
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
 
 The docker container being used to generate windows output is [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) (Source: [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc))
 
