@@ -1,4 +1,4 @@
-DOCKER := docker run -it
+DOCKER := docker run -i
 LOCALDIR := $(shell ./_getcwd.py)
 CONTDIR := /bundle
 VMAP := -v $(LOCALDIR):$(CONTDIR)
