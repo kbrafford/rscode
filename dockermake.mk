@@ -88,25 +88,25 @@ $(ARCHIVE): $(TARGETS)
 $(STATICLIBW64): $(LIBOBJW64)
 	@echo "64 bit windows lib"
 	$(MKDIR_P) $(WINDIR)
-	$(ARW64) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
+	$(ARW64) rcs $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBW64) $(CONTDIR)/$@
 
 $(STATICLIBW32): $(LIBOBJW32)
 	@echo "32 bit windows lib"
 	$(MKDIR_P) $(WINDIR)
-	$(ARW32) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
+	$(ARW32) rcs $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBW32) $(CONTDIR)/$@
 
 $(STATICLIBL64): $(LIBOBJL64)
 	@echo "64 bit linux lib"
 	$(MKDIR_P) $(LINDIR)
-	$(ARL64) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
+	$(ARL64) rcs $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBL64) $(CONTDIR)/$@
 
 $(STATICLIBL32): $(LIBOBJL32)
 	@echo "32 bit linux lib"
 	$(MKDIR_P) $(LINDIR)
-	$(ARL32) cq $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
+	$(ARL32) rcs $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $^)
 	$(RANLIBL32) $(CONTDIR)/$@
 
 $(STATICLIBMAC): $(LIBOBJMAC)
@@ -118,22 +118,22 @@ $(STATICLIBMAC): $(LIBOBJMAC)
 #  Application executables
 $(TARGETW64): $(addsuffix .ow64, $(basename $(APPSRC))) $(STATICLIBW64)
 	@echo "64 bit windows exe"
-	$(CCW64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^)) -L$(CONTDIR)/$(WINDIR) -l$(LIBNAME)64
+	$(CCW64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))  $(addprefix $(CONTDIR)/, $(STATICLIBW64))
 	$(STRIPW64) $(CONTDIR)/$@ 
 
 $(TARGETW32): $(addsuffix .ow32, $(basename $(APPSRC))) $(STATICLIBW32)
 	@echo "32 bit windows exe"
-	$(CCW32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^)) -L$(CONTDIR)/$(WINDIR) -l$(LIBNAME)
+	$(CCW32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBW32)) 
 	$(STRIPW32) $(CONTDIR)/$@ 
 
 $(TARGETL64): $(addsuffix .ol64, $(basename $(APPSRC))) $(STATICLIBL64)
 	@echo "64 bit linux exe"
-	$(CCL64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^)) -L$(CONTDIR)/$(LINDIR) -l$(LIBNAME)64
+	$(CCL64) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL64))
 	$(STRIPL64) $(CONTDIR)/$@ 
 
 $(TARGETL32): $(addsuffix .ol32, $(basename $(APPSRC))) $(STATICLIBL32)
 	@echo "32 bit linux exe"
-	$(CCL32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^)) -L$(CONTDIR)/$(LINDIR) -l$(LIBNAME)
+	$(CCL32) -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^)) $(addprefix $(CONTDIR)/, $(STATICLIBL32))
 	$(STRIPL32) $(CONTDIR)/$@ 
 
 $(TARGETMAC): $(addsuffix .om, $(basename $(APPSRC))) $(STATICLIBMAC)
