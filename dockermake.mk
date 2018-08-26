@@ -156,22 +156,27 @@ $(TARGETMAC): $(addsuffix .om, $(basename $(APPSRC))) $(STATICLIBMAC)
 # Shared libraries
 $(SHAREDLIBW64): $(LIBOBJW64)
 	@echo "64 bit windows dll"
+	$(MKDIR_P) $(WINDIR)
 	$(CCW64) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow64,$^))
 
 $(SHAREDLIBW32): $(LIBOBJW32)
 	@echo "32 bit windows dll"
+	$(MKDIR_P) $(WINDIR)
 	$(CCW32) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ow32,$^))
 
 $(SHAREDLIBL64): $(LIBOBJL64)
 	@echo "64 bit linux so"
+	$(MKDIR_P) $(LINDIR)
 	$(CCL64) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol64,$^))
 
 $(SHAREDLIBL32): $(LIBOBJL32)
 	@echo "32 bit linux so"
+	$(MKDIR_P) $(LINDIR)
 	$(CCL32) $(CPPFLAGS) $(CFLAGS) -shared -o $(CONTDIR)/$@ $(addprefix $(CONTDIR)/, $(filter %.ol32,$^))
 
 $(SHAREDLIBMAC): $(LIBOBJMAC)
 	@echo "mac dynlib"
+	$(MKDIR_P) $(MACDIR)
 	$(CCMAC) $(CPPFLAGS) $(CFLAGS) -shared -o $@ $(filter %.om,$^)
 
 .PHONY: clean
