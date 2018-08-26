@@ -61,7 +61,7 @@ sudo usermod -aG docker $USER
 
 **Note:** On Windows 7 and 10 using Docker Toolbox, I find that I need to check out this repo in C:\Users\Public in order for Docker to correctly get the *-v* volume mapping option to work. I do not know why this is, but it appears to be normally expected behavior, so I don't assume it's a big problem.
 
-**Note:** None of this has been tested on Linux yet.
+**Note:** This has been tested on Windows, Linux, and Mac.
 
 **Note:** If you're on Linux or Mac, make sure `_getcwd.py` is marked as executable.  I'll stop using this python hack once I figure out the best way to migrate that hack into the makefile, but that will have to wait until I get all of my test setups working.
 
