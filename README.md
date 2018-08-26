@@ -4,13 +4,13 @@ Reed-Solomon Code by **Henry Minsky**
 
 ### *Hi. The RSCODE project is an implementation of a Reed-Solomon error correction algorithm. Error correcting codes are marvelous jewels of mathematics and algorithms, providing an almost supernatural ability to recover good data from a corrupted channel.*
 
-This github repository is a fork of Henry Minsky's Reed-Solomon error correction code.  [The original repository is here](http://rscode.sourceforge.net/).
+This github repository is a fork of Henry Minsky's Reed-Solomon error correction code.  [The original repository is here](http://rscode.sourceforge.net/), and there is a fantastic "Introduction to Reed Solomon Codes" document included [here](https://github.com/kbrafford/rscode/blob/master/src/rs.doc).
 
-The code license is the GPL, and a very reasonable licensing structure is available for uses where the GPL is unsuitable. From Minsky's page:
+The license for this code is the GPL.  For cases where the GPL is unsuitable, a very reasonable licensing structure is available. From Minsky's page:
 
    *The code is licensed under the GPL, however a commercial license is also available. A royalty-free license to modify and redistribute the
    code in binary or source form is available. [Pricing info is available here](http://beartronics.com/rscode.html). Please contact
-   [hqm@alum.mit.edu](hqm@alum.mit.edu)*
+   [hqm@alum.mit.edu](mailto:hqm@alum.mit.edu).*
 
 
 #### This repo
