@@ -13,7 +13,7 @@ The license for this code is the GPL.  For cases where the GPL is unsuitable, a 
    [hqm@alum.mit.edu](mailto:hqm@alum.mit.edu).*
 
 
-#### This repo
+#### This repository
 [http://github.com/kbrafford/rscode](http://github.com/kbrafford/rscode)
 
 This github-hosted project has the original source code in unmodified form, as well as a new docker-based build platform and Python wrapper class.
@@ -22,9 +22,14 @@ If you build it on Windows or Linux, you get a sample executable, static library
 
 If you build it on the Mac, you get all of the Windows and Linux targets, as well as an executable, static lib, and shared lib for the Mac as well.
 
+#### Host Environment Prequisites
+| Host    | GNU Tools                                                 | Python                           | Docker                                                                    |
+| ------- |:---------------------------------------------------------:|:--------------------------------:|:-------------------------------------------------------------------------:|
+| Windows | [make](http://gnuwin32.sourceforge.net/packages/make.htm)<br/> *make sure make.exe is added to the PATH* | [python](https://www.python.org/)<br /> *make sure python.exe is added to the PATH*| [Docker For Windows](https://docs.docker.com/docker-for-windows/install/)<br />-or-<br /> [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) |
+| Mac     | [XCode Command line tools](http://railsapps.github.io/xcode-command-line-tools.html) | (python pre-installed)| [Docker For Mac](https://docs.docker.com/docker-for-mac/install/) |
+| Linux   | ```sudo apt-get install build-essential``` | ```sudo apt-get install python```| See Linux Docker instructions below |
 
-#### Docker
-The C and libraries for this project are developed using [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) on **Windows 7** and **Windows 10**, [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) on the **Mac**, and will be tested on a **Mint Linux** virtual machine as time allows. I welcome any feedback about how the Docker strategy is handled here.
+#### Advanced Docker Setup
 
 I typically set up Docker on my Linux machine thusly:
 ```
@@ -43,7 +48,7 @@ sudo apt install -y linux-image-generic linux-image-extra-virtual
 sudo reboot
 ```
 
-Then do this:
+Then do this.  The group add step is to make sure you can run the makefile without needing to `sudo` all the time:
 ```
 sudo apt install -y docker.io
 sudo groupadd docker
@@ -51,7 +56,7 @@ sudo usermod -aG docker $USER
 ```
 
 
-###### Containers Being Used
+#### Containers Being Used
 | Target OS         | Container        |  Source  |
 | -------------- |-------------|------------|
 | Windows  | [https://hub.docker.com/r/kbrafford/win-gcc/](https://hub.docker.com/r/kbrafford/win-gcc/) | [https://github.com/kbrafford/win-gcc](https://github.com/kbrafford/win-gcc)|
@@ -79,3 +84,4 @@ sudo usermod -aG docker $USER
 | Target         | Status        |
 | -------------- |:-------------:|
 | 32/64-bit Python2/3 wrapper class (cross platform) |   *(todo)*    |
+
