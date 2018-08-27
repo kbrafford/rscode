@@ -27,5 +27,5 @@ LIBSRC := $(addprefix $(_SRCDIR)/, $(_LIBSRCFILES))
 CFLAGS += -Wall
 CFLAGS += -O2
 
-# Now we pass all this information off to dockermake!
+# Now we pass all this information off to dockermake
 include dockermake.mk
