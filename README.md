@@ -8,7 +8,7 @@ This github repository is a fork of Henry Minsky's Reed-Solomon error correction
 
 The license for this code is the GPL.  For cases where the GPL is unsuitable, a very reasonable licensing structure is available. From Minsky's page:
 
-   *The code is licensed under the GPL, however a commercial license is also available. A royalty-free license to modify and redistribute the
+>   *The code is licensed under the GPL, however a commercial license is also available. A royalty-free license to modify and redistribute the
    code in binary or source form is available. [Pricing info is available here](http://beartronics.com/rscode.html). Please contact
    [hqm@alum.mit.edu](mailto:hqm@alum.mit.edu).*
 
