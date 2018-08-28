@@ -67,7 +67,7 @@ endif
 all : $(ARCHIVE)
 
 $(ARCHIVE): $(TARGETS)
-	$(GZIP) $(CONTDIR)/$(ARCHIVE) $(CONTDIR)/build
+	$(GZIP) $(CONTDIR)/$(ARCHIVE) $(CONTDIR)/$(OUTDIR)
 #
 # Rules for intermediate files
 #
