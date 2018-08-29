@@ -8,7 +8,7 @@ import sys
 #  form that docker for windows seems to want bash for windows to emit
 #
 #  Keith R. Brafford
-#  https://github.com/kbrafford/rscode
+#  https://github.com/kbrafford/containerized_multimake
 #
 
 #  >>> import os
